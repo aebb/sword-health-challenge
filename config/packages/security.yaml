@@ -1,0 +1,27 @@
+security:
+    enable_authenticator_manager: true
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        App\Entity\User:
+            algorithm: auto
+
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: apiToken
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            custom_authenticators:
+                - App\Security\TokenAuthenticator
+    access_control:
+          # require ROLE_TECHNICIAN and/or ROLE_MANAGER for /tasks*
+         - { path: '^/tasks', roles: [ROLE_TECHNICIAN, ROLE_MANAGER], methods: [GET] }
+         - { path: '^/tasks', roles: [ROLE_TECHNICIAN], methods: [POST] }
+

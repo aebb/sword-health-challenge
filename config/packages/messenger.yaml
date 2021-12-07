@@ -1,0 +1,11 @@
+framework:
+    messenger:
+        transports:
+            async:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
+                options:
+                    stream: task-stream
+                    group: task-group
+                    delete_after_ack: true
+        routing:
+            'App\Message\Task\TaskMessage': async
